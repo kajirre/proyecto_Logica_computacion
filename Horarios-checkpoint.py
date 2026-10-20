@@ -1,5 +1,5 @@
-fromfrom itertools import combinations, product
-from Logica import *
+from itertools import combinations, product
+from Logica_checkpoint import *
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from types import MethodType
