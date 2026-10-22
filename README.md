@@ -2,23 +2,25 @@
 
 Este repositorio contiene el desarrollo del proyecto para la asignatura de Lógica para Ciencias de la Computación de la Universidad del Rosario.
 
-El objetivo principal es modelar el problema de asignación de horarios académicos mediante lógica proposicional, transformando las restricciones institucionales en una base de conocimiento (cláusulas) que pueda ser resuelta por un SAT Solver para encontrar un horario válido y libre de conflictos.
+El proyecto representa las reglas de asignación de horarios como fórmulas de lógica proposicional. El programa muestra un horario de ejemplo y verifica que cumpla las reglas. También convierte la base de conocimiento a cláusulas mediante la transformación de Tseitin; todavía no busca automáticamente una solución con un SAT solver.
 
 ## Integrantes
 - Jhonatan Gutiérrez Rondón
 - Juan Andrés Pineda
 
-## Estructura del Repositorio
-- `Horarios-checkpoint.py`: Script principal que define los dominios (cursos, profesores, horarios, salones) y ejecuta el modelo SAT.
-- `Logica-checkpoint.py`: Módulo base provisto para la lógica del SAT Solver y Tableaux.
-- `docs/`: Directorio que contiene los documentos formales de las entregas (PDF y/o código fuente LaTeX).
+## Archivos principales
+- `Horarios.py`: define los cursos, profesores, bloques y salones; construye las reglas, muestra un horario de ejemplo y aplica la transformación de Tseitin.
+- `Logica.py`: contiene las estructuras para representar y evaluar fórmulas proposicionales.
+- `Solucion_horarios.ipynb`: explica el modelo, muestra el horario y presenta pruebas de las reglas.
 
 ## Entregas
 - [Entrega 1](./Entregas/primera_entraga_logica_computacion.pdf): Modelado formal y base de conocimiento inicial.
 - [Entrega 2](./Entregas/segunda_entrega_logica_computación-2.pdf): Simbolización de las reglas del problema (Y-torias y O-torias).
 
 ## Entorno de Ejecución y Dependencias
-El proyecto está desarrollado en Python. Para ejecutar el script principal, asegúrese de tener instalado Python 3.x y las librerías necesarias:
+El proyecto está desarrollado en Python. Para ejecutar el script y ver el horario de ejemplo, instale Matplotlib y ejecute:
 
 ```bash
 pip install matplotlib
+python Horarios.py
+```
