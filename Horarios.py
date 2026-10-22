@@ -1,5 +1,5 @@
 from itertools import combinations, product
-from Logica_checkpoint import *
+from Logica import *
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from types import MethodType
@@ -106,6 +106,21 @@ class Horarios:
             if I[l]:
                 print(self.A.escribir(l))
 
+    def ejemplo(self):
+        I = {
+            self.a(c, p, h, s): False
+            for c, p, h, s in product(range(NC), range(NP), range(NH), range(NS))
+        }
+        asignaciones = [
+            (0, 0, 0, 0),
+            (2, 0, 1, 0),
+            (1, 2, 0, 1),
+            (3, 1, 1, 1),
+        ]
+        for asignacion in asignaciones:
+            I[self.a(*asignacion)] = True
+        return I
+
     def visualizar(self, I):
         fig, axes = plt.subplots(figsize=(3 * NS + 1, 2 * NH))
         ancho = 1. / NS
@@ -136,10 +151,8 @@ class Horarios:
 
 def tseitin(formula):
     '''
-    Convierte una fórmula (string inorder) a forma clausal con la
-    transformación de Tseitin. Devuelve (ids, clausulas) donde ids
-    mapea cada letra proposicional a un entero positivo y cada cláusula
-    es una lista de enteros (negativo = literal negado).
+    Convierte una fórmula a cláusulas mediante Tseitin.
+    Devuelve el número de cada átomo y la lista de cláusulas.
     '''
     arbol = inorder_to_tree(formula)
     ids = {}
@@ -175,72 +188,13 @@ def tseitin(formula):
     return ids, clausulas
 
 
-def dpll(clausulas, asignacion):
-    '''
-    DPLL con propagación unitaria. Devuelve un dict var -> bool
-    o None si las cláusulas son insatisfacibles.
-    '''
-    while True:
-        unidades = set()
-        restantes = []
-        for c in clausulas:
-            pendientes = []
-            satisfecha = False
-            for l in c:
-                v = asignacion.get(abs(l))
-                if v is None:
-                    pendientes.append(l)
-                elif v == (l > 0):
-                    satisfecha = True
-                    break
-            if satisfecha:
-                continue
-            if not pendientes:
-                return None
-            if len(pendientes) == 1:
-                unidades.add(pendientes[0])
-            restantes.append(pendientes)
-        clausulas = restantes
-        if not unidades:
-            break
-        if any(-l in unidades for l in unidades):
-            return None
-        asignacion = dict(asignacion)
-        for l in unidades:
-            asignacion[abs(l)] = l > 0
-    if not clausulas:
-        return asignacion
-    # Ramificación sobre un literal de la cláusula más corta
-    literal = min(clausulas, key=len)[0]
-    for valor in (literal > 0, literal < 0):
-        nueva_asig = dict(asignacion)
-        nueva_asig[abs(literal)] = valor
-        res = dpll(clausulas, nueva_asig)
-        if res is not None:
-            return res
-    return None
-
-
-def resolver(formula):
-    '''
-    SAT solver: Tseitin + DPLL sobre las fórmulas de Logica.py.
-    Devuelve una interpretación (dict átomo -> bool) o None
-    si la fórmula es insatisfacible.
-    '''
-    ids, clausulas = tseitin(formula)
-    res = dpll(clausulas, {})
-    if res is None:
-        return None
-    return {letra: res.get(v, False) for letra, v in ids.items()}
-
-
 if __name__ == '__main__':
     h = Horarios()
-    I = resolver(h.base_conocimiento())
-    if I is None:
-        print('La base de conocimiento es insatisfacible: no hay horario válido')
-    else:
+    I = h.ejemplo()
+    base = inorder_to_tree(h.base_conocimiento())
+    if base.valor(I):
+        print('Horario de ejemplo válido:')
         h.imprimir(I)
         h.visualizar(I)
-
-        
+    else:
+        print('El horario de ejemplo no cumple todas las reglas.')
