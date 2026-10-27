@@ -151,8 +151,8 @@ class Horarios:
 
 def tseitin(formula):
     '''
-    Convierte una fórmula a cláusulas mediante Tseitin.
-    Devuelve el número de cada átomo y la lista de cláusulas.
+    Convierte una formula a clausulas mediante Tseitin.
+    Devuelve el numero de cada atomo y la lista de clausulas.
     '''
     arbol = inorder_to_tree(formula)
     ids = {}
